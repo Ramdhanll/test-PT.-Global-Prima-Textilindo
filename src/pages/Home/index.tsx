@@ -46,10 +46,10 @@ const Home: FC<IHome> = () => {
    }
 
    const getTotal = ({ product_stock }: { product_stock: any }) => {
-      const one = getProductStock({ idLocation: 1, product_stock })
-      const three = getProductStock({ idLocation: 3, product_stock })
-      const five = getProductStock({ idLocation: 5, product_stock })
-      return one + three + five
+      const total = datas.location.map((location) =>
+         getProductStock({ idLocation: location.id, product_stock })
+      )
+      return total.reduce((total, num) => total + num, 0)
    }
 
    const getTotalOrder = (items: any) => {
@@ -76,9 +76,9 @@ const Home: FC<IHome> = () => {
                <TableCaption>Data PT. Global Prima Textilindo</TableCaption>
                <Thead>
                   <Tr>
-                     <Th>Jakarta - Kedoya</Th>
-                     <Th>Tangerang - Dadap</Th>
-                     <Th>Bekasi - Galaxy</Th>
+                     {datas.location.map((location) => (
+                        <Th key={location.id}>{location.name}</Th>
+                     ))}
                      <Th>Category</Th>
                      <Th>Product</Th>
                      <Th>Total Stock</Th>
@@ -89,24 +89,14 @@ const Home: FC<IHome> = () => {
                <Tbody>
                   {proformaItem.map((item) => (
                      <Tr key={item.product_id}>
-                        <Td>
-                           {getProductStock({
-                              idLocation: 1,
-                              product_stock: item.product_stock,
-                           }).toLocaleString()}
-                        </Td>
-                        <Td>
-                           {getProductStock({
-                              idLocation: 3,
-                              product_stock: item.product_stock,
-                           }).toLocaleString()}
-                        </Td>
-                        <Td>
-                           {getProductStock({
-                              idLocation: 5,
-                              product_stock: item.product_stock,
-                           }).toLocaleString()}
-                        </Td>
+                        {datas.location.map((location) => (
+                           <Td key={location.id}>
+                              {getProductStock({
+                                 idLocation: location.id,
+                                 product_stock: item.product_stock,
+                              }).toLocaleString()}
+                           </Td>
+                        ))}
                         <Td>{item.categoryDescription}</Td>
                         <Td>{item.productDescription}</Td>
                         <Td>
